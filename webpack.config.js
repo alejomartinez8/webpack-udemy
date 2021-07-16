@@ -11,7 +11,7 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     publicPath: '',
   },
-  mode: 'none',
+  mode: 'development',
   module: {
     rules: [
       {
@@ -50,6 +50,10 @@ module.exports = {
           },
         },
       },
+      {
+        test: /\.hbs$/,
+        use: ['handlebars-loader'],
+      },
     ],
   },
   plugins: [
@@ -57,17 +61,11 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'style.[contenthash].css',
     }),
-    new CleanWebpackPlugin({
-      cleanOnceBeforeBuildPatterns: [
-        '**/*',
-        path.join(process.cwd(), 'build/**/*'),
-      ],
-    }),
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       title: 'Hello world',
-      meta: {
-        description: 'Some Description',
-      },
+      template: 'src/index.hbs',
+      description: 'Some Description',
     }),
   ],
 };
