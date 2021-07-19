@@ -4,34 +4,28 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: {
-    'hello-world': './src/hello-world.js',
-    apple: './src/apple.js',
-  },
+  entry: './src/index.js',
   output: {
-    filename: '[name].[contenthash].js', // could be too [id] instead of [name]
+    filename: 'bundle.[contenthash].js',
     path: path.resolve(__dirname, './dist'),
-    publicPath: '',
+    publicPath: '/static',
   },
   mode: 'production',
   optimization: {
     splitChunks: {
       chunks: 'all',
-      minSize: 3000,
+      minSize: 10000,
+      automaticNameDelimiter: '_',
     },
   },
   module: {
     rules: [
       {
-        test: /\.(ttf)$/,
-        type: 'asset/resource',
-      },
-      {
-        test: /\.(png|jpeg|jpg)$/,
+        test: /\.(png|jpg)$/,
         type: 'asset',
         parser: {
           dataUrlCondition: {
-            maxSize: 3 * 1024, // 3 kylobytes
+            maxSize: 3 * 1024,
           },
         },
       },
@@ -66,24 +60,13 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css',
+      filename: 'styles.[contenthash].css',
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      filename: 'hello-world.html',
-      chunks: ['hello-world'],
       title: 'Hello world',
+      description: 'Hello world',
       template: 'src/page-template.hbs',
-      description: 'Hello World',
-      minify: false,
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'apple.html',
-      chunks: ['apple'],
-      title: 'Apple',
-      template: 'src/page-template.hbs',
-      description: 'Some Description',
-      minify: false,
     }),
   ],
 };
