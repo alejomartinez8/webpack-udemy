@@ -4,13 +4,22 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  entry: './src/index.js',
+  entry: {
+    'hello-world': './src/hello-world.js',
+    apple: './src/apple.js',
+  },
   output: {
-    filename: 'bundle.[contenthash].js',
+    filename: '[name].[contenthash].js', // could be too [id] instead of [name]
     path: path.resolve(__dirname, './dist'),
     publicPath: '',
   },
   mode: 'production',
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      minSize: 3000,
+    },
+  },
   module: {
     rules: [
       {
@@ -57,13 +66,24 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'style.[contenthash].css',
+      filename: '[name].[contenthash].css',
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
+      filename: 'hello-world.html',
+      chunks: ['hello-world'],
       title: 'Hello world',
-      template: 'src/index.hbs',
+      template: 'src/page-template.hbs',
+      description: 'Hello World',
+      minify: false,
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'apple.html',
+      chunks: ['apple'],
+      title: 'Apple',
+      template: 'src/page-template.hbs',
       description: 'Some Description',
+      minify: false,
     }),
   ],
 };
